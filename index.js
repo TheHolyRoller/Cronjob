@@ -224,6 +224,10 @@ async function getProduct(){
     console.log("this is not working");
     console.log(elements); 
     
+    
+    
+    
+    
         
     }
 
