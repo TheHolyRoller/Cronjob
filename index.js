@@ -217,6 +217,15 @@ async function getProduct(){
         
         
     }
+    
+    else{
+    
+    console.log("I'm getting undefined"); 
+    console.log("this is not working");
+    console.log(elements); 
+    
+        
+    }
 
      
     
