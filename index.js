@@ -6,13 +6,22 @@ const nodeCron = require('node-cron');
  
 
 // Create the url variable here 
-const url = 'https://www.gumtree.com/search?search_category=cars&vehicle_make=fiat&search_location=la14yt&max_price=8500&min_price=500';
+const url = 'https://www.gumtree.com/search?search_category=cars&vehicle_make=fiat&search_location=la14yt&max_price=8500&min_price=500'; 
+
+// const url = 'https://www.ebay.com/b/Performance-Racing-Parts/107057/bn_568110'; 
+
+
+
+
 
 // Global counter variable 
 let counter = 3; 
 
 // Create the global Link Array here 
 let links = []; 
+
+let visitedProducts = []; 
+
 
 
 
@@ -92,6 +101,34 @@ async function scrapeData(){
     
     // Find the dom elements by using the 
     // ClassNames 
+    console.log("is this working"); 
+    
+    // Add in the code here to scrape the data from the page 
+    
+    // This is the class to look for 
+    // .css-sik94l
+    
+    // Add in the code to select the html element using the 
+    // CSS className 
+    const priceElement = await page.$('.css-sik94l');
+    
+    const priceText = await page.evaluate( el => el.textContent, priceElement); 
+    
+    
+
+    // then get the text part of the HTML element 
+    
+    // Then format the text 
+    
+    // Then turn the text into a number 
+    
+    // Then run the number through some tests 
+    
+    
+    
+    
+    
+    
     
     // Once the dom element has been found then extract the text 
     
@@ -107,54 +144,6 @@ async function scrapeData(){
     
 }
 
-
-
-
-
-
-// Add in the goto product function here 
-// Create the function to navigate to the product page here 
-async function gotoProduct(){
-    
-    // Extract the link from the props 
-    
-    // Go to the link here 
-    
-    
-    // Call the scrape data function here 
-    
-    
-    
-    
-    
-}
-
-
-
-
-
-// Add in the get Link function here 
-// Create the function to get the link here 
-async function getLink(){
-
-    // Find the nearest ancestor of the element that was passed 
-    // Through the props 
-    
-    // Call the get Nearest Ancestor Function here 
-    // Pass the props to it 
-    
-    // Extract the href of the link here 
-    
-    // Add the link variable to the global Array here 
-    
-    
-    // Call the gotoProduct function here with the link as the 
-    // Argument 
-    
-    
-
-    
-}
 
 
 
@@ -176,7 +165,25 @@ async function getNearestAncestor(element){
     
         
     }
+    
+    // Add in the get current url function here 
+    async function currentURL(){
+        
+        const currentUrl = await page.url();
+        
+        visitedProducts.push(currentUrl); 
+        
+        
+        console.log(currentUrl);
+        
+        
+        // Call the scrape data function here with the current url as props 
+        scrapeData(); 
+        
 
+        
+    }
+    
 
 
 
@@ -186,61 +193,56 @@ async function getProduct(){
     // Call the configure browser function here 
     page = await configureBrowser(); 
     
-    // Wait for the get product function to finish 
     
     
-    // Use the counter variable here 
-    
-    
-    // Create a statement that will look for the nth symbol here 
-    
-    // Add in the className of the element your looking for here 
-    // const element = await page.waitForSelector(`::-p-text (£):nth(${counter})`);
-    // const element = await page.waitForSelector(`::-p-text (£):nth(3)`);
-    
-    const elements = await page.$x("//text()[contains(., '£')][3]"); 
-    
-    
-    // Log the product to the console as just a testing start 
-    // console.log(elements.textContent);
-    
-    
-    
-    // Add in the check to see if the elements array has any elements 
-    if(elements.length > 0){
+    // const elements = await page.$x("//text()[contains(., '$')][3]");
         
-        console.log("there seems to be some content");
-        const element = elements[0]; 
-        console.log("this is the element")
-        console.log(element); 
-        console.log(element.textContent); 
+    await page.screenshot({path: 'facebook.png'});
         
+    
+    // Turn this into a function 
+    const  elements =  await page.evaluate(() => {
+        // Get all <a> elements in the document
+        const links = document.querySelectorAll('a');
+        // Filter the links that match the regex pattern
+        const regex = /£\d+/;
+        const result = [];
+        const linkArray = []; 
         
-    }
-    
-    else{
-    
-    console.log("I'm getting undefined"); 
-    console.log("this is not working");
-    console.log(elements); 
-    
-    
-    
-    
-    
-        
-    }
+  
+        for (let link of links) {
+          if (regex.test(link.textContent)) {
+            result.push(link);
+            console.log(link); 
+            console.log(result); 
+            // Add in a check here to see if the link is already 
+            // in the Array 
+            
+            const element = result[0]; 
+            
+             result[0].click(); 
 
-     
+             
+             
+            //  Instead of trying to find the ancestor just 
+            // Get the current url after you have clicked on the 
+            // Page 
+            
+            // This is how you get the current url from the 
+            // Current page 
+            // const CURRENT_URL = await page.url(); 
+            // You might want to abstract this to a async function 
+            
+            // Call the scrape data function here 
+             
+          }
+        }
+        return result;
+      });
     
-    // Call the getLink function here that will use the 
-    // Recently found symbol in the arguments of the function call 
-    
-    // Call the find nearest ancestor function here and pass in the 
-    
-    
-    
-    
+    // Add in the function call to get the current url 
+    currentURL(); 
+
 }
 
 
