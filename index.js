@@ -8,11 +8,12 @@ const nodeCron = require('node-cron');
 // Create the url variable here 
 
 // update 
-const url = 'https://www.gumtree.com/search?search_category=cars&vehicle_make=dacia&search_location=uk&max_price=12000&min_price=500'; 
+// const url = 'https://www.gumtree.com/search?search_category=cars&vehicle_make=audi&search_location=uk&max_price=500000&min_price=500'; 
 
 
 
-// const url = 'https://www.gumtree.com/search?search_category=cars&vehicle_make=fiat&search_location=la14yt&max_price=8500&min_price=500'; 
+
+const url = 'https://www.gumtree.com/search?search_category=cars&vehicle_make=fiat&search_location=la14yt&max_price=8500&min_price=500'; 
 
 // const url = 'https://www.ebay.com/b/Performance-Racing-Parts/107057/bn_568110'; 
 
@@ -334,7 +335,7 @@ async function getProduct(){
         
     
     // Turn this into a function 
-    const  elements =  await page.evaluate(() => {
+    const  elements =  await page.evaluate((counter) => {
         // Get all <a> elements in the document
         const links = document.querySelectorAll('a');
         // Filter the links that match the regex pattern
@@ -342,32 +343,29 @@ async function getProduct(){
         const result = [];
         const linkArray = []; 
         
+        console.log("this is the length of the links"); 
+        
+        console.log(links.length); 
+        
+        
+        
   
         for (let link of links) {
           if (regex.test(link.textContent)) {
+            
+            console.log("***********"); 
+            console.log("this is the counter variable"); 
+            console.log(counter);
+            
             result.push(link);
-            console.log(link); 
-            console.log(result); 
-            // Add in a check here to see if the link is already 
-            // in the Array 
+            // console.log(link); 
+            // console.log(result); 
             
-            const element = result[0]; 
-            
-             result[0].click(); 
+            // links[counter].click(); 
 
-             
-             
-            //  Instead of trying to find the ancestor just 
-            // Get the current url after you have clicked on the 
-            // Page 
+            console.log(result); 
             
-            // This is how you get the current url from the 
-            // Current page 
-            // const CURRENT_URL = await page.url(); 
-            // You might want to abstract this to a async function 
-            
-            // Call the scrape data function here 
-             
+
           }
         }
         return result;
@@ -393,36 +391,23 @@ async function driver(){
     // Call the getProduct function here 
     getProduct(); 
     
-    
-    
-    // Once the function call has set off all the other functions 
-    // And the code has finished executing the next few lines 
-    // Of code should be read and executed 
-    
-    // Call the close browser function here 
-    
-    
-    
 }
 // Add in the counter variable here 
 
 // Create the Cron Driver function here 
 nodeCron.schedule('* * * * *', async () => {
 
-    
-    // Call the main driver function here 
-    driver(); 
-    // counter++; 
-    
-    // Increment the variable here 
-    
     limit = 20; 
     if(counter < limit){
-        // counter++
-        
+        counter++;
+
+    }
+    else{
+
+        counter = 0; 
     }
 
+    driver(); 
 
-    
 });
 
