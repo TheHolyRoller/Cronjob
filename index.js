@@ -3,10 +3,16 @@ const puppeteer = require('puppeteer');
 const nodeCron = require('node-cron'); 
 
 // Add in the remaining imports here 
- 
+
 
 // Create the url variable here 
-const url = 'https://www.gumtree.com/search?search_category=cars&vehicle_make=fiat&search_location=la14yt&max_price=8500&min_price=500'; 
+
+// update 
+const url = 'https://www.gumtree.com/search?search_category=cars&vehicle_make=dacia&search_location=uk&max_price=12000&min_price=500'; 
+
+
+
+// const url = 'https://www.gumtree.com/search?search_category=cars&vehicle_make=fiat&search_location=la14yt&max_price=8500&min_price=500'; 
 
 // const url = 'https://www.ebay.com/b/Performance-Racing-Parts/107057/bn_568110'; 
 
@@ -53,15 +59,119 @@ async function goBack(){
     
     
     
+    
 }
+
+
+// Add in the send message function here 
+
+async function sendMessage(messageURL){
+    
+    // Select the message component here 
+     
+    
+    // Click on the message input element 
+    
+    // Enter in the text 
+    
+    // Press enter 
+    
+    
+    // Wait for a while 
+    
+    // Call the go back home function here 
+    
+    
+    
+    
+    
+}
+
+
+async function login(messageURL){
+
+        
+        // Get the email input here
+        
+    await page.waitForSelector('[name="email"]'); 
+    await page.waitForSelector('[name="password"]');
+    
+    // Wait for the element to be available 
+    const emailInput = await page.$('[name="email"]'); 
+    const passwordInput = await page.$('[name="password"]');
+    
+    // Access the element 
+    console.log("this is the email input "); 
+    console.log(emailInput);
+    
+    console.log("this is the password input"); 
+    console.log(passwordInput); 
+    
+    
+    await emailInput.click(); 
+    
+    
+    await emailInput.type("danielwakeley7@gmail.com");
+    
+    
+    await passwordInput.click(); 
+    await passwordInput.type("Beholdhowgood!133");
+    
+    await page.keyboard.press('Enter'); 
+    
+    
+    
+      await sendMessage(messageURL); 
+      
+        
+        
+    
+    
+}
+
+
+
 
 // Add in the navigate to a different page function here 
 
 // Create the function to navigate to a different page here or go back 
-async function messageBoss(){
+async function messageBoss(messageURL){
 
     // Create code that goes to facebook messenger and 
     // Sends them the saved link. 
+    
+    // Goto the facebook profile here 
+    console.log('teleporting there *****');
+    
+    
+    // Create a wait function here so that the navigation occurs correctly 
+    await Promise.all([page.goto('https://discord.com/channels/@me/644645709781663744'), page.waitForNavigation()]);
+    // Send the message using the messageURL 
+    
+    // Create the script to send the message here 
+    
+    // Create the script to login to discord here 
+    
+    
+    // Call the teleport function here and in the message url as props 
+    login(messageURL); 
+    
+    
+    
+    
+    // Click on it 
+    
+    // Then enter in the text 
+    
+    // Then select the second input box here 
+    
+    // Enter in the text 
+    
+    // Then press enter 
+    
+    
+    // Then call the go back function here 
+
     
     
     // Then call the go back function after a delay
@@ -74,14 +184,38 @@ async function messageBoss(){
 // Add in the evaluate data function here 
 
 // Create the function to evaluate them here 
-async function evaluateData(){
+async function evaluateData(priceNum){
     
     // Extract the data from the props here 
+    if(priceNum > 500 && priceNum < 10000 ){
+        
+        console.log("we have a high price!!!");
+        
+        
+        console.log('this is the price');
+        
+        console.log(priceNum);
+        
+        // Call the Message boss function with the priceNum current url 
+        
+        // Get the current url here 
+        const messageURL = await page.url();
+        
+        
+        // Call the MessageBoss function here 
+        messageBoss(messageURL); 
+        
+
+    }
+    
+    
     
     // Save the data to variables here 
     
     
     // Create logic that evaluates the data here 
+    
+    
     
     
     // Create logic that either call navigate to a different page 
@@ -90,6 +224,7 @@ async function evaluateData(){
 
     
 }
+
 
 
 
@@ -103,44 +238,37 @@ async function scrapeData(){
     // ClassNames 
     console.log("is this working"); 
     
-    // Add in the code here to scrape the data from the page 
     
-    // This is the class to look for 
-    // .css-sik94l
-    
-    // Add in the code to select the html element using the 
-    // CSS className 
-    const priceElement = await page.$('.css-sik94l');
-    
-    const priceText = await page.evaluate( el => el.textContent, priceElement); 
-    
-    
+    await page.waitForSelector('.css-sik94l'); // Wait for the element to be available 
+    const priceElement = await page.$('.css-sik94l'); 
 
-    // then get the text part of the HTML element 
     
-    // Then format the text 
+    const priceText = await page.evaluate(el => el.textContent, priceElement); 
     
-    // Then turn the text into a number 
+    // console.log(priceText);
     
-    // Then run the number through some tests 
+    // Now format the priceText 
+    const formattedText = priceText.replace(/[, £]/g, ''); 
     
-    
-    
-    
-    
+    // console.log("this is the formatted text");
+    // console.log(formattedText); 
     
     
-    // Once the dom element has been found then extract the text 
+    // Now turn the formatted text into a number 
+    const priceNum = Number(formattedText); 
     
-    // Save the text to a variable 
+    console.log("this is the price number"); 
+    console.log(priceNum); 
     
-    // Pass the variables through props to the function call 
     
-    // Call the evaluate Data function here with the props 
     
- 
-
-
+    // Call the evaluate data function here
+    // Pass in the priceNum as props 
+    
+    evaluateData(priceNum); 
+    
+    
+    
     
 }
 
@@ -170,6 +298,11 @@ async function getNearestAncestor(element){
     async function currentURL(){
         
         const currentUrl = await page.url();
+        
+        
+        // Add in the check here to see if the url has 
+        // Already been added to the Array and if it has trigger 
+        // the go home function 
         
         visitedProducts.push(currentUrl); 
         
