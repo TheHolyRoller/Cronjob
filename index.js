@@ -2,7 +2,9 @@
 const puppeteer = require('puppeteer'); 
 const nodeCron = require('node-cron'); 
 
-const url = 'https://www.gumtree.com/search?search_category=cars&search_location=uk&max_price=30000&min_price=1000'; 
+const url = 'https://www.gumtree.com/search?search_category=cars&search_location=uk&max_price=1000000'; 
+
+// const url = 'https://www.gumtree.com/search?search_category=cars&search_location=uk&max_price=30000&min_price=1000'; 
 
 // const url = 'https://www.gumtree.com/search?search_category=cars&vehicle_make=audi&search_location=uk&max_price=55000&min_price=0'; 
 
@@ -118,20 +120,18 @@ async function evaluateData(priceNum){
 
 async function scrapeData(){
     
-    console.log("is this working"); 
-    await page.waitForSelector('.css-sik94l'); // Wait for the element to be available 
-    const priceElement = await page.$('.css-sik94l'); 
+    // console.log("is this working"); 
 
     
-    const priceText = await page.evaluate(el => el.textContent, priceElement); 
-    const formattedText = priceText.replace(/[, £]/g, ''); 
+    // const priceText = await page.evaluate(el => el.textContent, priceElement); 
+    // const formattedText = priceText.replace(/[, £]/g, ''); 
 
-    const priceNum = Number(formattedText); 
+    // const priceNum = Number(formattedText); 
     
-    console.log("this is the price number"); 
-    console.log(priceNum); 
+    // console.log("this is the price number"); 
+    // console.log(priceNum); 
     
-    evaluateData(priceNum); 
+    // evaluateData(priceNum); 
     
 }
 async function getNearestAncestor(element){
@@ -150,58 +150,36 @@ async function getProduct(){
     page = await configureBrowser(); 
     // const elements = await page.$x("//text()[contains(., '$')][3]");
         
+        // css-1ygzid9
     await page.screenshot({path: 'facebook.png'});
-
-    // Turn this into a function 
-    const  elements =  await page.evaluate((counter) => {
-        // Get all <a> elements in the document
-        const links = document.querySelectorAll('a');
-        // Filter the links that match the regex pattern
-        const regex = /£\d+/;
-        const result = [];
-        const linkArray = []; 
-        
-        console.log("this is the length of the links"); 
-        
-        console.log(links.length); 
   
-        for (let link of links) {
-          if (regex.test(link.textContent)) {
-            
-            if(link === counter){
-                
-                // Add in an await for selector here 
-                page.waitForSelector('a'); 
-                
-                
-                link.click(); 
-                result.push(link);
-                result[0].click(); 
-                
-                
-                
-            }
-            
-            result.push(link);
-            result[0].click(); 
+    const  elements =  await page.evaluate((counter) => {
+        
+        const allDivs = document.querySelectorAll('div');
 
-          }
-        }
-        return result;
+        
+        const number = 3; 
+        const regex = /£\d+/;
+        // const result = [];
+        // const linkArray = []; 
+        
+        const result = Array.from(allDivs).filter(div => regex.test(div.textContent));
+        
+        console.log("this is the price element")
+        console.log(result[2]); 
+        
+        
+        return result[2]; 
+        
+        
+        // Add in the Array from the query selector all here 
+        
+        
+        
+        // console.log("this is the length of the links"); 
+        // return result;
       });
-      
-   
-    
-    // Check if the index of the Array matches the counter variable 
-    
-    // If it does then click on that link
-    
-    
-    // Then get the current URL 
-      
-    
-    // Add in the function call to get the current url 
-    currentURL(); 
+//    await  currentURL(); 
 
 }
 
