@@ -38,21 +38,47 @@ async function goBack(){
 async function sendMessage(messageURL){
     
     // Select the message component here 
-     
+    //  use the aria-label="DylB99 (direct message)" as the selector 
+    // Wait for the selector here 
+    // ClassName = link__2e8e1
+    // Use a className here 
+    // await page.waitForSelector('[class="link__2e8e1"]'); 
     
-    // Click on the message input element 
+    const profile_Link = 'https://discord.com/channels/@me/644645709781663744'; 
     
-    // Enter in the text 
-    
-    // Press enter 
-    
-    
-    // Wait for a while 
-    
-    // Call the go back home function here 
+    await page.waitForSelector('[aria-label="DylB99 (direct message)"]'); 
     
     
+    // const profile = await page.$('[class="link__2e8e1"]');
+    const profile = await page.$('[aria-label="DylB99 (direct message)"]');
     
+    // Navigate to the profile page 
+    
+   
+    
+    // await page.waitForSelector('[role="textbox"]'); 
+    
+    // Navigate here 
+    await Promise.all([page.goto(profile_Link), page.waitForNavigation()]);
+    
+    
+    
+    // Use an await here and use the className instead 
+    
+    // Add in an await for select here 
+    await page.waitForSelector('[role="textbox"]'); 
+    
+    
+    const textBox = await page.$('[role="textbox"]');
+    
+    await textBox.click(); 
+    
+    await textBox.type(messageURL);
+    
+    // Press Enter here 
+    await page.keyboard.press('Enter'); 
+    
+    // Call the goBack function here 
     
     
 }
@@ -100,7 +126,7 @@ async function messageBoss(messageURL){
 
 async function evaluateData(priceNum){
     
-    if(priceNum > 500 && priceNum < 10000 ){
+    if(priceNum > 500 && priceNum < 90000 ){
         
         console.log("we have a high price!!!");
         console.log('this is the price');
@@ -113,21 +139,28 @@ async function evaluateData(priceNum){
 
 async function scrapeData(){
     
-    // console.log("is this working"); 
+    console.log("is this working");
+    
+    // Get the priceElement here 
+    await page.waitForSelector('.css-sik94l'); // Wait for the element to be available 
+    const priceElement = await page.$('.css-sik94l');
 
-    
-    // const priceText = await page.evaluate(el => el.textContent, priceElement); 
-    // const formattedText = priceText.replace(/[, £]/g, ''); 
+    // The argument was price element next to textContent
+    const priceText = await page.evaluate(el => el.textContent, priceElement); 
+    const formattedText = priceText.replace(/[, £]/g, ''); 
 
-    // const priceNum = Number(formattedText); 
+
+    const priceNum = Number(formattedText); 
     
-    // console.log("this is the price number"); 
-    // console.log(priceNum); 
+    console.log("this is the price number"); 
+    console.log(priceNum); 
     
-    // evaluateData(priceNum); 
+    evaluateData(priceNum); 
+    
     
 }
 async function getNearestAncestor(element){
+
     const anchor = await page.evaluateHandle(el => el.closest('a'), element); 
     }
     async function currentURL(){
@@ -135,12 +168,14 @@ async function getNearestAncestor(element){
         const currentUrl = await page.url();
         visitedProducts.push(currentUrl); 
         console.log(currentUrl);
+
         scrapeData(); 
     }
 async function getProduct(){
     
     // Call the configure browser function here 
     page = await configureBrowser(); 
+    
     // const elements = await page.$x("//text()[contains(., '$')][3]");
         
         // css-1ygzid9
@@ -162,21 +197,19 @@ async function getProduct(){
             result.push(link);
             console.log(link); 
             console.log(result); 
-            // Add in a check here to see if the link is already 
-            // in the Array 
-            
+
             const element = result[0]; 
             //  result[0].click(); 
              const productLink = result[0]; 
              const ref = productLink.getAttribute('href'); 
              linkArray.push(ref); 
              console.log(ref); 
-             
+
              
           }
         }
         
-        result[1].click(); 
+        result[2].click(); 
         
         
         
@@ -184,6 +217,12 @@ async function getProduct(){
         
         return result;
       });
+      
+      
+
+      currentURL(); 
+      
+      
 
 }
 
