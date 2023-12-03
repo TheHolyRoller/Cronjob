@@ -2,15 +2,8 @@
 const puppeteer = require('puppeteer'); 
 const nodeCron = require('node-cron'); 
 
-const url = 'https://www.gumtree.com/search?search_category=cars&search_location=uk&max_price=1000000'; 
+const url = 'https://www.gumtree.com/search?search_category=cars&vehicle_make=alfa-romeo&search_location=uk&max_price=2000000'; 
 
-// const url = 'https://www.gumtree.com/search?search_category=cars&search_location=uk&max_price=30000&min_price=1000'; 
-
-// const url = 'https://www.gumtree.com/search?search_category=cars&vehicle_make=audi&search_location=uk&max_price=55000&min_price=0'; 
-
-// const url = 'https://www.gumtree.com/search?search_category=cars&vehicle_make=bmw&search_location=uk&max_price=1000000&min_price=500'; 
-
-// const url = 'https://www.gumtree.com/search?search_category=cars&vehicle_make=fiat&search_location=la14yt&max_price=8500&min_price=500'; 
 let counter =3; 
 let links = []; 
 
@@ -153,33 +146,44 @@ async function getProduct(){
         // css-1ygzid9
     await page.screenshot({path: 'facebook.png'});
   
-    const  elements =  await page.evaluate((counter) => {
-        
-        const allDivs = document.querySelectorAll('div');
+    // Turn this into a function 
+    const  elements =  await page.evaluate(() => {
+        // Get all <a> elements in the document
+        const links = document.querySelectorAll('a');
+        // Filter the links that match the regex pattern
+        const regex = /£\d+/;
+        const result = [];
+        const linkArray = []; 
 
         
-        const number = 3; 
-        const regex = /£\d+/;
-        // const result = [];
-        // const linkArray = []; 
+  
+        for (let link of links) {
+          if (regex.test(link.textContent)) {
+            result.push(link);
+            console.log(link); 
+            console.log(result); 
+            // Add in a check here to see if the link is already 
+            // in the Array 
+            
+            const element = result[0]; 
+            //  result[0].click(); 
+             const productLink = result[0]; 
+             const ref = productLink.getAttribute('href'); 
+             linkArray.push(ref); 
+             console.log(ref); 
+             
+             
+          }
+        }
         
-        const result = Array.from(allDivs).filter(div => regex.test(div.textContent));
-        
-        console.log("this is the price element")
-        console.log(result[2]); 
-        
-        
-        return result[2]; 
-        
-        
-        // Add in the Array from the query selector all here 
+        result[1].click(); 
         
         
         
-        // console.log("this is the length of the links"); 
-        // return result;
+        
+        
+        return result;
       });
-//    await  currentURL(); 
 
 }
 
